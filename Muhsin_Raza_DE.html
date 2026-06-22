@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muhsin Raza — Data Engineer | GCP, PySpark, Kafka, BigQuery, dbt, Airflow</title>
+<meta name="description" content="Muhsin Raza is a Data Engineer specializing in batch and streaming ETL pipelines on Google Cloud Platform using Apache PySpark, Kafka, Flink, dbt, Airflow, and BigQuery. Databricks and Microsoft Azure certified.">
+<meta name="author" content="Muhsin Raza">
+<meta name="keywords" content="Data Engineer, GCP, Google Cloud Platform, PySpark, Apache Spark, Apache Kafka, Apache Flink, BigQuery, dbt, Apache Airflow, ETL, ELT, Streaming, Dataflow, Dataproc, Composer, Pub/Sub, Looker Studio, Microsoft Fabric, Snowflake, Delta Lake, Databricks, Azure Fundamentals, Data Modeling, Data Quality">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0E14;
+    --ink-2:#0F141D;
+    --panel:#131A26;
+    --panel-2:#172131;
+    --line:#243043;
+    --line-soft:#1C2533;
+    --text:#E8EEF6;
+    --text-dim:#93A2B6;
+    --text-faint:#5E6E84;
+    --teal:#5EEAD4;
+    --teal-deep:#2DD4BF;
+    --amber:#F5B947;
+    --amber-deep:#E29A18;
+    --display:"Space Grotesk", system-ui, sans-serif;
+    --body:"Inter", system-ui, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, monospace;
+    --maxw:1080px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--teal);color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+  /* ---- ambient grid ---- */
+  .grid-bg{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-soft) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:46px 46px;
+    opacity:.35;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);
+  }
+  main,nav{position:relative;z-index:1}
+
+  /* ---- nav ---- */
+  nav{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:blur(12px);
+    background:rgba(11,14,20,.72);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    max-width:var(--maxw);margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+  }
+  .brand{font-family:var(--mono);font-size:13px;letter-spacing:.04em;color:var(--text-dim)}
+  .brand b{color:var(--teal);font-weight:600}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap}
+  .nav-links a{
+    font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
+    padding:6px 10px;border-radius:6px;transition:color .2s,background .2s;
+  }
+  .nav-links a:hover{color:var(--teal);background:var(--panel)}
+  .nav-toggle{display:none}
+
+  /* ---- hero ---- */
+  header{padding:64px 0 40px}
+  .eyebrow{
+    font-family:var(--mono);font-size:12.5px;color:var(--teal);
+    letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--teal)}
+  h1{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(2.6rem,7vw,4.6rem);
+    line-height:1.02;letter-spacing:-.02em;margin-bottom:18px;
+  }
+  h1 .grad{
+    background:linear-gradient(100deg,var(--teal),var(--amber));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .role{
+    font-family:var(--mono);font-size:clamp(.92rem,2.2vw,1.05rem);
+    color:var(--text-dim);margin-bottom:26px;
+  }
+  .role b{color:var(--text);font-weight:500}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .meta a,.meta span{
+    font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
+    border:1px solid var(--line);border-radius:7px;padding:7px 12px;
+    display:inline-flex;align-items:center;gap:7px;transition:.2s;
+  }
+  .meta a:hover{border-color:var(--teal);color:var(--teal)}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--teal)}
+  .dot.amber{background:var(--amber)}
+
+  /* ---- pipeline svg ---- */
+  .pipe-card{
+    margin-top:8px;border:1px solid var(--line);border-radius:16px;
+    background:linear-gradient(180deg,var(--panel),var(--ink-2));
+    padding:18px 18px 6px;overflow:hidden;
+  }
+  .pipe-head{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--mono);font-size:11.5px;color:var(--text-faint);
+    margin-bottom:6px;flex-wrap:wrap;gap:8px;
+  }
+  .pipe-head .live{color:var(--teal);display:inline-flex;align-items:center;gap:7px}
+  .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(94,234,212,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(94,234,212,.45)}70%{box-shadow:0 0 0 9px rgba(94,234,212,0)}100%{box-shadow:0 0 0 0 rgba(94,234,212,0)}}
+  svg.dag{width:100%;height:auto;display:block}
+  .edge{fill:none;stroke:var(--line);stroke-width:2}
+  .flow{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:5 16;}
+  .flow.t{stroke:var(--teal);animation:dash 1.6s linear infinite}
+  .flow.a{stroke:var(--amber);animation:dash 2.1s linear infinite}
+  @keyframes dash{to{stroke-dashoffset:-42}}
+  .node rect{fill:var(--panel-2);stroke:var(--line);stroke-width:1.5;rx:9}
+  .node:hover rect{stroke:var(--teal)}
+  .node text{font-family:var(--mono);font-size:12px;fill:var(--text);font-weight:500}
+  .node .sub{font-size:9.5px;fill:var(--text-faint)}
+  .stage-lab{font-family:var(--mono);font-size:9.5px;fill:var(--text-faint);letter-spacing:.1em}
+
+  /* ---- sections ---- */
+  section{padding:56px 0;border-top:1px solid var(--line-soft)}
+  .sec-head{margin-bottom:34px}
+  .sec-tag{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--teal);letter-spacing:.22em;text-transform:uppercase;display:inline-flex;align-items:center;gap:11px;margin-bottom:16px}
+  .sec-tag::before{content:"";width:24px;height:1px;background:linear-gradient(90deg,var(--teal),transparent)}
+  h2{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,4vw,2.3rem);letter-spacing:-.01em;line-height:1.1}
+  .lede{color:var(--text-dim);max-width:60ch;margin-top:14px;font-size:1.02rem}
+
+  /* ---- impact strip ---- */
+  .impact{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .stat{border:1px solid var(--line);border-radius:13px;padding:22px 18px;background:var(--panel);transition:.25s}
+  .stat:hover{transform:translateY(-3px);border-color:var(--teal)}
+  .stat .num{font-family:var(--display);font-weight:700;font-size:2.1rem;color:var(--teal);line-height:1}
+  .stat:nth-child(2) .num,.stat:nth-child(4) .num{color:var(--amber)}
+  .stat .lab{font-size:.86rem;color:var(--text);margin-top:10px;font-weight:500}
+  .stat .src{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);margin-top:6px}
+
+  /* ---- stack ---- */
+  .stack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .stack-card{border:1px solid var(--line);border-radius:13px;background:var(--panel);padding:20px}
+  .stack-card.gcp{grid-column:1/-1;border-color:var(--line);background:linear-gradient(120deg,var(--panel),var(--panel-2))}
+  .stack-card h3{font-family:var(--mono);font-size:12.5px;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+  .stack-card.gcp h3{color:var(--amber)}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:var(--mono);font-size:12px;color:var(--text);border:1px solid var(--line);background:var(--ink-2);border-radius:6px;padding:6px 10px;transition:.18s}
+  .tag:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-2px)}
+  .stack-card.gcp .tag:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* ---- experience ---- */
+  .xp{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:26px}
+  .xp-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:6px}
+  .xp-top h3{font-family:var(--display);font-size:1.3rem;font-weight:600}
+  .xp-top .co{color:var(--teal)}
+  .xp-when{font-family:var(--mono);font-size:12.5px;color:var(--text-faint)}
+  .xp-loc{font-family:var(--mono);font-size:12px;color:var(--text-faint);margin-bottom:18px}
+  .xp ul{list-style:none;display:grid;gap:13px}
+  .xp li{padding-left:24px;position:relative;color:var(--text-dim)}
+  .xp li::before{content:"▸";position:absolute;left:0;color:var(--teal);font-size:.9em;top:1px}
+  .xp li b{color:var(--text);font-weight:600}
+
+  /* ---- projects ---- */
+  .filters{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:28px}
+  .filter{font-family:var(--mono);font-size:12.5px;color:var(--text-dim);border:1px solid var(--line);background:transparent;border-radius:20px;padding:8px 15px;cursor:pointer;transition:.18s}
+  .filter:hover{color:var(--text);border-color:var(--text-dim)}
+  .filter.active{background:var(--teal);color:var(--ink);border-color:var(--teal);font-weight:600}
+  .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .proj{
+    border:1px solid var(--line);border-radius:14px;background:var(--panel);
+    padding:22px;display:flex;flex-direction:column;gap:13px;
+    transition:.3s cubic-bezier(.2,.7,.3,1);position:relative;overflow:hidden;
+  }
+  .proj::before{content:"";position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--teal),var(--amber));transform:scaleX(0);transform-origin:left;transition:transform .3s}
+  .proj:hover{transform:translateY(-4px);border-color:var(--line)}
+  .proj:hover::before{transform:scaleX(1)}
+  .proj.hide{display:none}
+  .proj-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .proj h3{font-family:var(--display);font-size:1.12rem;font-weight:600;line-height:1.25}
+  .proj .badge{font-family:var(--mono);font-size:10px;color:var(--ink);background:var(--teal);border-radius:5px;padding:3px 7px;white-space:nowrap;font-weight:600}
+  .proj .badge.stream{background:var(--amber)}
+  .proj p{color:var(--text-dim);font-size:.94rem}
+  .proj .pt{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+  .proj .pt span{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);border:1px solid var(--line-soft);border-radius:5px;padding:3px 7px}
+
+  /* ---- certs ---- */
+  .certs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .cert{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:24px;transition:.25s;position:relative}
+  .cert:hover{transform:translateY(-3px);border-color:var(--amber)}
+  .cert .ic{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:1.1rem;margin-bottom:16px}
+  .cert.db .ic{background:rgba(245,185,71,.12);color:var(--amber);border:1px solid rgba(245,185,71,.3)}
+  .cert.ms .ic{background:rgba(94,234,212,.1);color:var(--teal);border:1px solid rgba(94,234,212,.3)}
+  .cert h3{font-family:var(--display);font-size:1.05rem;font-weight:600;line-height:1.25;margin-bottom:8px}
+  .cert .iss{font-family:var(--mono);font-size:11.5px;color:var(--text-dim)}
+  .cert .date{font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:14px;padding-top:14px;border-top:1px solid var(--line-soft)}
+
+  /* ---- education ---- */
+  .edu{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:center}
+  .edu h3{font-family:var(--display);font-size:1.25rem;font-weight:600}
+  .edu .uni{color:var(--text-dim);margin-top:6px}
+  .edu .when{font-family:var(--mono);font-size:13px;color:var(--teal)}
+
+  /* ---- footer ---- */
+  footer{border-top:1px solid var(--line-soft);padding:54px 0 60px;text-align:center}
+  footer h2{margin-bottom:14px}
+  footer p{color:var(--text-dim);max-width:48ch;margin:0 auto 26px}
+  .foot-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .foot-links a{font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:9px;padding:11px 18px;transition:.2s;display:inline-flex;gap:8px;align-items:center}
+  .foot-links a.primary{background:var(--teal);color:var(--ink);border-color:var(--teal);font-weight:600}
+  .foot-links a:hover{transform:translateY(-2px)}
+  .foot-links a:not(.primary):hover{border-color:var(--teal);color:var(--teal)}
+  .copyright{font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:36px}
+
+  /* ---- reveal ---- */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---- responsive ---- */
+  @media(max-width:760px){
+    .nav-links{display:none}
+    .impact{grid-template-columns:repeat(2,1fr)}
+    .stack-grid,.projects,.certs{grid-template-columns:1fr}
+    header{padding:42px 0 28px}
+    section{padding:46px 0}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto}
+    .flow{stroke-dasharray:none;opacity:.6}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">muhsin<b>.raza</b> <span style="color:var(--text-faint)">// data engineer</span></div>
+    <div class="nav-links">
+      <a href="#summary">summary</a>
+      <a href="#impact">impact</a>
+      <a href="#stack">stack</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#certifications">certs</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<header class="wrap">
+  <div class="eyebrow">Data Engineer · Islamabad, Pakistan</div>
+  <h1>Muhsin Raza</h1>
+  <p class="role">I build scalable <b>batch &amp; streaming ETL</b> pipelines on <b>Google Cloud</b> — moving high-throughput event data from source to insight with <b>PySpark</b>, <b>Kafka</b>, <b>Flink</b>, <b>dbt</b>, <b>Airflow</b> &amp; <b>BigQuery</b>.</p>
+  <div class="meta">
+    <a href="mailto:razamuhsin254@gmail.com"><span class="dot"></span>razamuhsin254@gmail.com</a>
+    <a href="tel:+923289314288"><span class="dot"></span>+92 328 931 4288</a>
+    <a href="https://github.com/MuhsinRaza253" target="_blank" rel="noopener"><span class="dot amber"></span>github.com/MuhsinRaza253</a>
+    <a href="https://www.linkedin.com/in/muhsin-raza/" target="_blank" rel="noopener"><span class="dot amber"></span>linkedin.com/in/muhsin-raza</a>
+  </div>
+
+  </header>
+
+<section id="summary">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">summary</span>
+      <h2>From raw events to business-ready insight.</h2>
+      <p class="lede">Data Engineer with hands-on experience building scalable batch and streaming ETL pipelines on Google Cloud Platform. I migrate Python workloads to distributed Apache PySpark for major performance gains, design real-time ingestion with Kafka and Flink, model analytics layers with dbt, orchestrate workflows with Airflow, and deliver insight through BigQuery and Looker Studio. Also experienced with Microsoft Fabric, AI-powered data tooling (MCP servers + Claude API), and cloud-native system design.</p>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">impact</span>
+      <h2>Numbers tied to real pipelines.</h2>
+    </div>
+    <div class="impact">
+      <div class="stat reveal"><div class="num">~5×</div><div class="lab">Faster ETL after migrating Pandas → PySpark on Dataproc</div><div class="src">hrs → &lt;30 min</div></div>
+      <div class="stat reveal"><div class="num">~60%</div><div class="lab">Storage cost cut with data archival strategies — tiering MongoDB data across GCS (Standard → Coldline → Archive)</div><div class="src">archival strategy</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">stack</span>
+      <h2>Tools I reach for.</h2>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-card gcp reveal">
+        <h3>Google Cloud Platform</h3>
+        <div class="tags">
+          <span class="tag">BigQuery</span><span class="tag">Dataflow</span><span class="tag">Dataproc</span>
+          <span class="tag">Dataplex</span><span class="tag">Datastream</span><span class="tag">Composer</span>
+          <span class="tag">Cloud Pub/Sub</span><span class="tag">BigQuery Conversational Analytics</span>
+          <span class="tag">Looker Studio</span><span class="tag">Cloud Functions</span><span class="tag">Cloud Scheduler</span>
+          <span class="tag">GCS</span><span class="tag">IAM</span>
+        </div>
+      </div>
+      <div class="stack-card reveal">
+        <h3>Languages</h3>
+        <div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">PySpark</span><span class="tag">PyFlink</span><span class="tag">Jinja</span></div>
+      </div>
+      <div class="stack-card reveal">
+        <h3>Data Engineering</h3>
+        <div class="tags"><span class="tag">Apache Spark</span><span class="tag">Apache Kafka</span><span class="tag">Apache Flink</span><span class="tag">Apache Beam</span><span class="tag">Airflow</span><span class="tag">dbt</span><span class="tag">ETL / ELT</span><span class="tag">Batch Processing</span><span class="tag">Stream Processing</span><span class="tag">Data Archival</span><span class="tag">Data Modeling</span><span class="tag">Data Quality</span><span class="tag">KPI Dashboard Design</span></div>
+      </div>
+      <div class="stack-card reveal">
+        <h3>Warehousing &amp; Storage</h3>
+        <div class="tags"><span class="tag">BigQuery</span><span class="tag">Snowflake</span><span class="tag">Databricks</span><span class="tag">Delta Lake</span><span class="tag">OneLake</span><span class="tag">MongoDB</span><span class="tag">Firestore</span></div>
+      </div>
+      <div class="stack-card reveal">
+        <h3>BI · AI · Tooling</h3>
+        <div class="tags"><span class="tag">Looker Studio</span><span class="tag">Microsoft Fabric</span><span class="tag">Claude API</span><span class="tag">MCP Servers</span><span class="tag">NL2SQL</span><span class="tag">Git</span><span class="tag">Docker</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">experience</span>
+      <h2>Where I've been shipping.</h2>
+    </div>
+    <div class="xp reveal">
+      <div class="xp-top">
+        <h3>Junior Data Engineer <span class="co">· Scala Teams</span></h3>
+        <span class="xp-when">2024 — Present</span>
+      </div>
+      <div class="xp-loc">Islamabad, Pakistan</div>
+      <ul>
+        <li>Built and maintained scalable <b>batch and streaming ETL pipelines</b> on GCP Dataflow using Apache Beam, PySpark, and Kafka — loading high-throughput event data into BigQuery and Firestore.</li>
+        <li>Delivered <b>~5× pipeline performance improvement</b> by migrating Python/Pandas ETL workloads to distributed Apache PySpark on GCP Dataproc.</li>
+        <li>Designed <b>Apache Airflow DAGs</b> orchestrating multi-stage e-commerce pipelines with strict cross-task dependency management and data quality gates.</li>
+        <li>Built business-facing <b>KPI dashboards</b> in Looker Studio surfacing search, conversion, and product metrics for stakeholders.</li>
+        <li>Built a daily <b>data-quality &amp; observability service</b> running ~20 collection-level health checks — freshness, volume vs. 7/30-day rolling baselines, schema validity, and cross-system reconciliation (Kafka → Mongo landing, raw → processed) — over a multi-tenant MongoDB layer, surfacing silent pipeline failures through Slack alerts and BigQuery trend history.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">projects</span>
+      <h2>Selected work.</h2>
+      <p class="lede">Filter by what you're hiring for. Each project links a real outcome to the tools that produced it.</p>
+    </div>
+    <div class="filters reveal" role="tablist" aria-label="Filter projects by category">
+      <button class="filter active" data-filter="all">all</button>
+      <button class="filter" data-filter="streaming">streaming</button>
+      <button class="filter" data-filter="batch">batch</button>
+      <button class="filter" data-filter="orchestration">orchestration</button>
+      <button class="filter" data-filter="bi">analytics / bi</button>
+      <button class="filter" data-filter="ai">ai / mcp</button>
+    </div>
+
+    <div class="projects">
+      <article class="proj reveal" data-cat="batch bi">
+        <div class="proj-top"><h3>Search Analytics &amp; Learning-to-Rank Data Platform</h3><span class="badge stream">production · etl</span></div>
+        <p>Scheduled Python services reconstructing user search sessions from MongoDB event data into a ground-truth click dataset for Learning-to-Rank (LTR) — normalizing queries with NLP (NLTK stopword removal + lemmatization), reconciling cart state, and aggregating per-query click/cart/order signals. Downstream ETL computes 17 search-analytics metrics (CTR, click position, impressions, zero-result queries, dwell time) into BigQuery with watermark-based incremental ingestion and 3-hour windowed aggregation.</p>
+        <div class="pt"><span>Python</span><span>MongoDB</span><span>BigQuery</span><span>ETL</span><span>NLTK / NLP</span><span>Learning-to-Rank</span><span>Concurrency</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch bi">
+        <div class="proj-top"><h3>E-Commerce Analytics &amp; Metrics Platform</h3><span class="badge stream">production · etl</span></div>
+        <p>Parallelized Python ETL services aggregating raw MongoDB event collections into BigQuery business metrics — average order value, cart-abandonment rate, order revenue, product views, and per-product CTR/CVR. Built gap-free day-by-day historical backfill with watermark-based incremental runs, multi-tenant / per-site granularity, server-side MongoDB aggregation, idempotent resumable jobs, audit logging, and BigQuery schema evolution with retry/throttle handling.</p>
+        <div class="pt"><span>Python</span><span>MongoDB</span><span>BigQuery</span><span>ETL</span><span>Aggregation Pipelines</span><span>Multi-tenant</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch">
+        <div class="proj-top"><h3>Data Quality &amp; Observability Service</h3><span class="badge stream">production · monitoring</span></div>
+        <p>Daily batch data-observability layer running ~20 collection-level health checks across the e-commerce data lifecycle (views, carts, orders, sessions, search clicks, PIM) over a multi-tenant MongoDB ingestion layer. Validates freshness, volume against 7/30-day rolling baselines, schema validity, and cross-system consistency — reconciling Kafka → Mongo landing and raw → processed counts to catch silent ingestion/transformation failures. Fans out to Slack (OK / WARN / FAIL alerts) and BigQuery time-series rows for drift, regression, and SLA tracking, with self-evolving schema.</p>
+        <div class="pt"><span>Python</span><span>MongoDB</span><span>BigQuery</span><span>Data Observability</span><span>Anomaly Detection</span><span>Slack</span><span>Multi-tenant</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="bi">
+        <div class="proj-top"><h3>Search &amp; Product KPI Dashboard Suite</h3><span class="badge">analytics</span></div>
+        <p>BigQuery materialized views ranking top search queries by volume, CTR, and purchase conversion. Looker Studio dashboards tracking most-viewed, most-clicked, and highest order-converting products.</p>
+        <div class="pt"><span>BigQuery</span><span>Looker Studio</span><span>Materialized Views</span><span>SQL</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch">
+        <div class="proj-top"><h3>Data Archival &amp; Lifecycle Service</h3><span class="badge">batch</span></div>
+        <p>Python orchestrator for intelligent GCS storage tiering (Standard → Coldline → Archive) — cut storage costs ~60%.</p>
+        <div class="pt"><span>Python</span><span>GCS</span><span>Firestore</span><span>Cloud Functions</span><span>Pub/Sub</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch">
+        <div class="proj-top"><h3>PySpark ETL Performance — ~5× Faster</h3><span class="badge">batch</span></div>
+        <p>Migrated Python/Pandas ETL to distributed PySpark on Dataproc — runtime from hours to under 30 minutes. Applied broadcast joins, partition pruning, Adaptive Query Execution, Kryo serialization, and columnar Parquet.</p>
+        <div class="pt"><span>PySpark</span><span>Dataproc</span><span>AQE</span><span>Parquet</span><span>BigQuery</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="ai">
+        <div class="proj-top"><h3>BigQuery MCP Server — NL2SQL</h3><span class="badge stream">ai / mcp</span></div>
+        <p>Model Context Protocol server converting natural-language questions into validated BigQuery SQL via the Claude API. Auto schema introspection through INFORMATION_SCHEMA, dry-run cost estimation, and query caching to control spend.</p>
+        <div class="pt"><span>MCP Server</span><span>Claude API</span><span>BigQuery</span><span>NL2SQL</span><span>Python</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="streaming">
+        <div class="proj-top"><h3>Real-Time E-Commerce Streaming</h3><span class="badge stream">streaming</span></div>
+        <p>Multi-topic Kafka ingestion processing live product, cart, and order events with end-to-end latency under 500ms. Stateful PyFlink processing with session + tumbling windows and exactly-once delivery.</p>
+        <div class="pt"><span>Kafka</span><span>Flink</span><span>PyFlink</span><span>BigQuery</span><span>Redis</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch bi">
+        <div class="proj-top"><h3>Additional GCP Dataflow Pipelines</h3><span class="badge">batch</span></div>
+        <p>E-commerce analytics ETL (Dataflow + BigQuery + Looker Studio), multi-source ingestion via custom Flex Templates from GCS, Pub/Sub, Cloud SQL &amp; REST APIs, and an automated data quality monitoring pipeline with Slack alerting.</p>
+        <div class="pt"><span>Dataflow</span><span>Apache Beam</span><span>Flex Templates</span><span>BigQuery</span><span>Slack</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch bi">
+        <div class="proj-top"><h3>Microsoft Fabric End-to-End Platform</h3><span class="badge">batch</span></div>
+        <p>Lakehouse architecture on OneLake with Delta Lake tables and Synapse Data Warehouse for SQL analytics. Data Factory batch pipelines, Eventstream real-time ingestion, and Power BI Direct Lake dashboards with sub-second refresh.</p>
+        <div class="pt"><span>Microsoft Fabric</span><span>OneLake</span><span>Delta Lake</span><span>Synapse</span><span>Power BI</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="orchestration">
+        <div class="proj-top"><h3>Dependency-Aware DAG Orchestration</h3><span class="badge">orchestration</span></div>
+        <p>Multi-stage Airflow DAG with sensor-gated dependencies: raw interaction events → user sessions → order conversions. ExternalTaskSensor for cross-DAG deps.</p>
+        <div class="pt"><span>Airflow</span><span>Composer</span><span>BigQuery</span><span>Slack</span></div>
+      </article>
+
+      <article class="proj reveal" data-cat="batch bi">
+        <div class="proj-top"><h3>Netflix Content Analytics — dbt</h3><span class="badge">batch</span></div>
+        <p>Layered dbt models (staging → intermediate → mart) with reusable Jinja macros. 120+ schema tests covering uniqueness, not-null, and referential integrity — 100% data quality pass rate.</p>
+        <div class="pt"><span>dbt Core</span><span>BigQuery</span><span>SQL</span><span>Jinja</span><span>ELT</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="certifications">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">certifications</span>
+      <h2>Credentials.</h2>
+    </div>
+    <div class="certs">
+      <div class="cert db reveal">
+        <div class="ic">DB</div>
+        <h3>Databricks Fundamentals Accreditation</h3>
+        <div class="iss">Databricks Academy</div>
+        <div class="date">Issued · May 19, 2026</div>
+      </div>
+      <div class="cert db reveal">
+        <div class="ic">AI</div>
+        <h3>Accredited Generative AI Fundamentals</h3>
+        <div class="iss">Databricks Academy</div>
+        <div class="date">Issued · May 22, 2026</div>
+      </div>
+      <div class="cert ms reveal">
+        <div class="ic">AZ</div>
+        <h3>Microsoft Certified: Azure Fundamentals (AZ-900)</h3>
+        <div class="iss">Microsoft</div>
+        <div class="date">Cloud fundamentals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-tag">education</span>
+      <h2>Foundation.</h2>
+    </div>
+    <div class="edu reveal">
+      <div>
+        <h3>BS Computer Science</h3>
+        <div class="uni">FAST National University of Computer and Emerging Sciences (FAST-NUCES), Islamabad</div>
+      </div>
+      <div class="when">2020 — 2024</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <span class="sec-tag">contact</span>
+    <h2>Let's build a pipeline.</h2>
+    <p>Open to data engineering roles. The fastest way to reach me is email — happy to walk through any project above.</p>
+    <div class="foot-links">
+      <a class="primary" href="mailto:razamuhsin254@gmail.com">Email me</a>
+      <a href="https://github.com/MuhsinRaza253" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="https://www.linkedin.com/in/muhsin-raza/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a href="tel:+923289314288">+92 328 931 4288</a>
+    </div>
+    <div class="copyright">© 2026 Muhsin Raza · Data Engineer · Islamabad, Pakistan</div>
+  </div>
+</footer>
+</main>
+
+<script>
+  // project filtering
+  const filters = document.querySelectorAll('.filter');
+  const projects = document.querySelectorAll('.proj');
+  filters.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      filters.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      projects.forEach(p=>{
+        const cats = p.dataset.cat.split(' ');
+        p.classList.toggle('hide', f!=='all' && !cats.includes(f));
+      });
+    });
+  });
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
